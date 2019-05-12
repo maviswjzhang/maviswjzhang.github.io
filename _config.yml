@@ -99,11 +99,11 @@ service-worker: true
 
 
 # Friends
-friends: [
-    {
-        title: "CSDN",
-        href: "https://blog.csdn.net/xijuezhu8128"
-    },
+# friends: [
+#     {
+#         title: "CSDN",
+#         href: "https://blog.csdn.net/xijuezhu8128"
+#     },
 #     {
 #         title: "简书·BY",
 #         href: "http://www.jianshu.com/u/e71990ada2fd"
