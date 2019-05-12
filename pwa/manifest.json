@@ -1,6 +1,6 @@
 {
-  "name": "BY Blog",
-  "short_name": "BY Blog",
+  "name": "Nick Blog",
+  "short_name": "Nick Blog",
   "description": "A personal blog by engineer",
   "icons": [{
     "src": "icons/nick_icon_128.png",
