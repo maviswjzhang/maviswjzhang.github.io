@@ -19,12 +19,12 @@ sidebar-avatar: /img/nick.jpg      # use absolute URL, seeing it's used in both 
 
 # SNS settings
 RSS: false
-# weibo_username:     qiubaiying
-# zhihu_username:     qiubaiying
+weibo_username:     qiubaiying
+zhihu_username:     qiubaiying
 github_username:    niecongchong
-# facebook_username:  baiying.qiu.7
-# jianshu_username:   e71990ada2fd
-#twitter_username:   qiubaiying
+facebook_username:  baiying.qiu.7
+jianshu_username:   e71990ada2fd
+twitter_username:   qiubaiying
 
 
 
