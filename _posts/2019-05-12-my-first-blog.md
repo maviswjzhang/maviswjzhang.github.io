@@ -1,15 +1,15 @@
 ---
 layout:     post
 title:      My First Post
-subtitle:   Hello World, Hello Blog
-date:       2019-02-06
-author:     BY
-header-img: img/post-bg-2015.jpg
+subtitle:   Hello World, Hello Blog!
+date:       2019-05-12
+author:     Nick
+header-img: 
 catalog: true
 tags:
-    - 生活
+    - Try
 ---
 
 ## Hey
->这是我的第一篇博客。
+>这是我的第一篇博客!
 
