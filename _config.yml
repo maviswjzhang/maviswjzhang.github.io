@@ -99,7 +99,7 @@ service-worker: true
 
 
 # Friends
-# friends: [
+friends: [
 #     {
 #         title: "CSDN",
 #         href: "https://blog.csdn.net/xijuezhu8128"
