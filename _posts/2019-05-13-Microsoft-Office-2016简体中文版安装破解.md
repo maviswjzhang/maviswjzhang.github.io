@@ -2,12 +2,12 @@
 layout:     post
 title:      Microsoft Office 2016 简体中文版安装破解
 subtitle:   按需所取，不喜勿扰！
-date:       2019-05-12
+date:       2019-05-13
 author:     Nick
 header-img: img/博客背景.jpg
 catalog: true
 tags:
-    - Try
+    - office
 ---
 
 # 1. 安装office2016
