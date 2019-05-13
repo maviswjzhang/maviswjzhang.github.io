@@ -38,8 +38,6 @@ unit b=5;
 
 [![img](http://s10.sinaimg.cn/mw690/003uYJ3pzy72ZHwNG9b39)](http://photo.blog.sina.com.cn/showpic.html#blogid=&url=http://album.sina.com.cn/pic/003uYJ3pzy72ZHwNG9b39)
 
-
  # 3.参考
 
 <http://blog.sina.com.cn/s/blog_bf1a24270102wjmh.html>
-
