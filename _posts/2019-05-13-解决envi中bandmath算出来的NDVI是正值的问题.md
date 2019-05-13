@@ -2,7 +2,7 @@
 layout:     post
 title:      为什么envi中band math算出来的NDVI MNDWI NDBI等全部是正值？
 subtitle:   数据类型!!!!!
-date:       2019-05-12
+date:       2019-05-13
 author:     Nick
 header-img: img/博客背景.jpg
 catalog: true
