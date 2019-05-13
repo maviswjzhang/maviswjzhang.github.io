@@ -411,3 +411,4 @@ class HighResolutionModule(nn.Module):
 
         return x_fuse
 ```
+
