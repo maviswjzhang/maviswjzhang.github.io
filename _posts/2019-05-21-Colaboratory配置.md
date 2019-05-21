@@ -33,11 +33,11 @@ Colaboratory 是一个 Google 研究项目，旨在帮助传播机器学习培�
 
 * 左上角新建 --> 更多 --> Colaboratory(如果更多中没有Colaboratory选项，则选择关联更多应用，搜索Colaboratory并关联)
 
-![tu](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-21-2.png)
+![tu](/img/2019-21-2.png)
 
 ## 2.3 Colaboratory 的jupyter notebook使用教程
 
-![tu](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-21-3.png)
+![tu](/img/2019-21-3.png)
 
 **2.3.1 页面整体布局**
 
@@ -49,7 +49,7 @@ Colaboratory 是一个 Google 研究项目，旨在帮助传播机器学习培�
 
 * 修改 --> 笔记本设置 -->在如下页面中修改硬件加速器维GPU并保存。
 
-![tu ](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-21-4.png)
+![tu ](/img/2019-21-4.png)
 
 **2.3.3 运行jupyter 文件**
 
@@ -64,7 +64,7 @@ Colaboratory 是一个 Google 研究项目，旨在帮助传播机器学习培�
 
   运行上面程序后，会出现如下结果，
 
-  ![tu](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-21-5.png)
+  ![tu](/img/2019-21-5.png)
 
   点击该链接，将拿到的密钥输入进入并回车
 
