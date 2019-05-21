@@ -20,7 +20,7 @@ Colaboratory 是一个 Google 研究项目，旨在帮助传播机器学习培�
 
 这块很简单了，能翻墙，傻瓜式下一步下一步。
 
-## 2.2 访问[谷歌云盘]([https://drive.google.com](https://drive.google.com/))
+## 2.2 访问[谷歌云盘](<https://drive.google.com/>)
 
 访问并登陆谷歌云盘。谷歌云盘的作用主要有两个，一是存储数据集，二是存储新建的Colaboratory jupyter 文件。
 
@@ -29,7 +29,7 @@ Colaboratory 是一个 Google 研究项目，旨在帮助传播机器学习培�
 * 左上角新建 --> 上传文件或文件夹 
 * *此处建议上传数据集的压缩包（.zip格式），好处一是上传数据快，二是占用云盘空间小（总共免费15G）*
 
-**2.2.2 新建Colaboratory **
+**2.2.2 新建Colaboratory**
 
 * 左上角新建 --> 更多 --> Colaboratory(如果更多中没有Colaboratory选项，则选择关联更多应用，搜索Colaboratory并关联)
 
