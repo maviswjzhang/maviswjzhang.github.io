@@ -63,12 +63,12 @@ disqus_username: nick nie
 
 # Gitalk
 gitalk:
-  enable: false    #是否开启Gitalk评论
-  clientID: f2c84e7629bb1446c1a4                            #生成的clientID
-  clientSecret: ca6d6139d1e1b8c43f8b2e19492ddcac8b322d0d    #生成的clientSecret
-  repo: qiubaiying.github.io    #仓库名称
-  owner: qiubaiying    #github用户名
-  admin: qiubaiying
+  enable: true    #是否开启Gitalk评论
+  clientID: 7ebb36a2fdf6513d5e6d                            #生成的clientID
+  clientSecret: f9ce6c4c8e7abde36c70d8797ff2c4c3ab59a4c8    #生成的clientSecret
+  repo: niecongchong.github.io    #仓库名称
+  owner: Nick Nie    #github用户名
+  admin: Nick Nie
   distractionFreeMode: true #是否启用类似FB的阴影遮罩
 
 
