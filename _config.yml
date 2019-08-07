@@ -57,9 +57,9 @@ kramdown:
 
 
 
-# 评论系统
-# Disqus（https://disqus.com/）
-disqus_username: nick nie
+# # 评论系统
+# # Disqus（https://disqus.com/）
+# disqus_username: nick nie
 
 # Gitalk
 gitalk:
