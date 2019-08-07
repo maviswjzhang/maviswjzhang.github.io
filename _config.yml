@@ -66,7 +66,7 @@ gitalk:
   enable: true    #是否开启Gitalk评论
   clientID: 7ebb36a2fdf6513d5e6d                            #生成的clientID
   clientSecret: f9ce6c4c8e7abde36c70d8797ff2c4c3ab59a4c8    #生成的clientSecret
-  repo: local_conv2d-keras    #仓库名称
+  repo: blog-gtalk    #仓库名称
   owner: niecongchong    #github用户名
   admin: niecongchong
   distractionFreeMode: true #是否启用类似FB的阴影遮罩
