@@ -71,9 +71,9 @@ Label(  'license plate'        , -1 ,       -1 , 'vehicle'         , 7      , ( 
 
 ## 2. [数据集下载](https://www.cityscapes-dataset.com/downloads/)
 
-![img](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-08-10-1.png)
+![img](/img/2019-08-10-1.png)
 
-![img](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-08-10-2.png)
+![img](/img/2019-08-10-2.png)
 
 **分别解压之后包含两个文件夹：**
 
