@@ -27,18 +27,18 @@ tags:
 * **步长**：卷积核沿着图像矩阵每次移动的长度
 * **内积**：卷积核和图像矩阵对应像素点相乘，然后相加得到一个总和，如下图所示。（不要和矩阵乘法混淆）
 
-![img](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-08-11-1.png)
+![img](/img/2019-08-11-1.png)
 
 * **卷积模式**：卷积有三种模式，FULL, SAME，VALID，实际使用注意区分使用的那种模式。（参考：https://zhuanlan.zhihu.com/p/62760780）
 
   * Full：全卷积，full模式的意思是，**从filter和image刚相交开始做卷积，**白色部分为填0，橙色部分为image, 蓝色部分为filter，filter的运动范围如图所示。
 
-  ![img](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-08-11-2.png)
+  ![img](/img/2019-08-11-2.png)
 
   * Same卷积：**当filter的锚点(K)与image的边角重合时，开始做卷积运算**，可见filter的运动范围比full模式小了一圈，same mode为full mode 的子集，即full mode的卷积结果包括same mode。
-  * ![2019-08-11-3](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-08-11-3.png)
+  * ![2019-08-11-3](/img/2019-08-11-3.png)
   * valid卷积：**当filter全部在image里面的时候，进行卷积运算**，可见filter的移动范围较same更小了，同样valid mode为same mode的子集。valid mode的卷积计算，填充边界中的像素值不会参与计算，即无效的填充边界不影响卷积，所以称为valid mode。
-  * ![2019-08-11-4](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-08-11-4.png)
+  * ![2019-08-11-4](/img/2019-08-11-4.png)
 
 python的scipy包中提供了convolve2d()函数来实现卷积运算，其参数如下：
 
@@ -78,7 +78,7 @@ cv2.filter2D(src,dst,ddepth,kernel,anchor=(-1,-1),delta=0,borderType=cv2.BORDER_
 
 高斯平滑即采用高斯卷积核对图像矩阵进行卷积操作。高斯卷积核是一个近似服从高斯分布的矩阵，随着距离中心点的距离增加，其值变小。这样进行平滑处理时，图像矩阵中锚点处像素值权重大，边缘处像素值权重小，下为一个3*3的高斯卷积核：
 
-![img](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-08-11-5.png)
+![img](/img/2019-08-11-5.png)
 
 opencv中提供了GaussianBlur()函数来进行高斯平滑，其对应参数如下：
 
@@ -110,11 +110,11 @@ cv.waitKey(0)
 cv.destroyAllWindows()
 ```
 
-![2019-08-11-6](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-08-11-6.png)
+![2019-08-11-6](/img/2019-08-11-6.png)
 
 对于上面的高斯卷积核，可以由如下两个矩阵相乘进行构建，说明高斯核是**可分离卷积核**，因此高斯卷积操作可以分成先进行垂直方向的一维卷积，再进行一维水平方向卷积。
 
-![2019-08-11-7](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-08-11-7.png)
+![2019-08-11-7](/img/2019-08-11-7.png)
 
 opencv中getGaussianKernel()能用来产生一维的高斯核，分别获得水平和垂直的高斯核，分两步也能完成高斯卷积，获得和GaussianBlur一样的结果。其参数如下：
 
@@ -169,13 +169,13 @@ if __name__=="__main__":
 先水平卷积，再垂直卷积
 ```
 
-![2019-08-11-8](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-08-11-8.png)
+![2019-08-11-8](/img/2019-08-11-8.png)
 
 ### 2.2 均值平滑
 
 高斯卷积核，对卷积框中像素值赋予不同权重，而均值平滑赋予相同权重，一个3*5的均值卷积核如下，均值卷积核也是可分离的。
 
-![2019-08-11-9](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-08-11-9.png)
+![2019-08-11-9](/img/2019-08-11-9.png)
 
 opencv的boxFilter()函数和blur()函数都能用来进行均值平滑，其参数如下：
 
@@ -217,7 +217,7 @@ cv.waitKey(0)
 cv.destroyAllWindows()
 ```
 
-![2019-08-11-10](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-08-11-10.png)
+![2019-08-11-10](/img/2019-08-11-10.png)
 
 ### 2.3 中值平滑
 
@@ -256,7 +256,7 @@ cv.waitKey(0)
 cv.destroyAllWindows()
 ```
 
-![2019-08-11-11](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-08-11-11.png)
+![2019-08-11-11](/img/2019-08-11-11.png)
 
 ### 2.4 双边滤波
 
@@ -290,7 +290,7 @@ cv.destroyAllWindows()
 bilateralFilter
 ```
 
-![2019-08-11-12](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-08-11-12.png)
+![2019-08-11-12](/img/2019-08-11-12.png)
 
 同样，利用numpy也可以自己实现双边滤波算法，同样需要对每个通道进行双边滤波，最后进行合并，下面代码只对单通道进行了双边滤波，代码和效果如下图：
 
@@ -353,7 +353,7 @@ if __name__=="__main__":
     cv.destroyAllWindows()
 ```
 
-![2019-08-11-13](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-08-11-13.png)
+![2019-08-11-13](/img/2019-08-11-13.png)
 
 ### 2.5 联合双边滤波
 
@@ -401,7 +401,7 @@ cv.destroyAllWindows()
 cv2.ximgproc.jointBilateralFilter()
 ```
 
-![2019-08-11-14](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-08-11-14.png)
+![2019-08-11-14](/img/2019-08-11-14.png)
 
 ### 2.6  导向滤波
 
@@ -438,4 +438,4 @@ cv.destroyAllWindows()
 cv2.ximgproc.guidedFilter
 ```
 
-![2019-08-11-15](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-08-11-15.png)
+![2019-08-11-15](/img/2019-08-11-15.png)
