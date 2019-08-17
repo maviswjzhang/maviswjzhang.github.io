@@ -87,7 +87,7 @@ y为BN层输出，此时归一化的均值与方差为当前mini-batch的均值�
 ### 2.5  SyncBN现有资源
 
 * [jianlong-yuan/syncbn-tensorflow](https://link.zhihu.com/?target=https%3A//github.com/jianlong-yuan/syncbn-tensorflow)重写了TensorFlow的官方方法，可以做个实验验证一下。
-* [旷视科技：CVPR 2018 | 旷视科技物体检测冠军论文——大型Mini-Batch检测器MegDet](https://zhuanlan.zhihu.com/p/37847559)
+* [旷视科技：CVPR 2018 旷视科技物体检测冠军论文——大型Mini-Batch检测器MegDet](https://zhuanlan.zhihu.com/p/37847559)
 * [tensorpack/tensorpack](https://link.zhihu.com/?target=https%3A//github.com/tensorpack/tensorpack/tree/master/examples/FasterRCNN)里面有该论文的代码实现。
 
 ## 3. some problems
