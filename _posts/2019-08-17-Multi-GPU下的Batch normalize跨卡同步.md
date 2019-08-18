@@ -28,21 +28,21 @@ tags:
 
 **BN前向过程如下：**
 
-![img](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-08-17-6.png)
+![img](/img/2019-08-17-6.png)
 
 **BN反向过程如下：**
 
-![img](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-08-17-7.png)
+![img](/img/2019-08-17-7.png)
 
-![img](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-08-17-1.jpg)
+![img](/img/2019-08-17-1.jpg)
 
-在训练时计算mini-batch的均值和标准差并进行反向传播训练，而测试时并没有batch的概念，训练完毕后需要提供固定的![img](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-08-17-8.png)供测试时使用。论文中对所有的mini-batch的![2019-08-17-9](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-08-17-9.png)取了均值:
+在训练时计算mini-batch的均值和标准差并进行反向传播训练，而测试时并没有batch的概念，训练完毕后需要提供固定的![img](/img/2019-08-17-8.png)供测试时使用。论文中对所有的mini-batch的![2019-08-17-9](/img/2019-08-17-9.png)取了均值:
 
-![2019-08-17-10](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-08-17-10.png)
+![2019-08-17-10](/img/2019-08-17-10.png)
 
-**测试阶段**，同样要进行归一化和缩放平移操作，唯一不同之处是不计算均值和方差，而使用训练阶段记录下来的![img](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-08-17-8.png)。
+**测试阶段**，同样要进行归一化和缩放平移操作，唯一不同之处是不计算均值和方差，而使用训练阶段记录下来的![img](/img/2019-08-17-8.png)。
 
-![img](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-08-17-11.png)
+![img](/img/2019-08-17-11.png)
 
 **Batch Norm优点:**
 
@@ -56,29 +56,29 @@ tags:
 
 BN层有4个参数，gamma、beta、moving mean、moving variance。其中gamma、beta为学习参数，moving mean、moving variance为数据集统计均值与方差，不可学习。在训练过程中：
 
-![img](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-08-17-4.png)
+![img](/img/2019-08-17-4.png)
 
 y为BN层输出，此时归一化的均值与方差为当前mini-batch的均值与方差。同时也记录moving mean、moving variance的值，每训练一个batch，moving mean、moving variance就更新一次。注意此参数更新过程不是学习过程，而是纯粹的计算train-set在当前BN数据分布过程，因此不能将算作是学习过程。decay为一个接近于1的值，比如0.9997。
 
 在测试过程中：
 
-![img](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-08-17-5.png)
+![img](/img/2019-08-17-5.png)
 
 ### 2.3 数据并行
 
 深度学习平台在多卡（GPU）运算的时候都是采用的数据并行（DataParallel），如下图:
 
-![2019-08-17-2](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-08-17-2.jpg)
+![2019-08-17-2](/img/2019-08-17-2.jpg)
 
 每次迭代，输入被等分成多份，然后分别在不同的卡上前向（forward）和后向（backward）运算，并且求出梯度，在迭代完成后合并 梯度、更新参数，再进行下一次迭代。因为在前向和后向运算的时候，每个卡上的模型是单独运算的，所以相应的Batch Normalization 也是在卡内完成，所以实际BN所归一化的样本数量仅仅局限于卡内，相当于批量大小（batch-size）减小了。
 
 ### 2.4 跨卡同步（Cross-GPU Synchronized）或 同步BN（SyncBN）
 
-跨卡同步BN的关键是在前向运算的时候拿到全局的均值和方差，在后向运算时候得到相应的全局梯度。 最简单的实现方法是先同步求均值，再发回各卡然后同步求方差，但是这样就同步了两次。实际上只需要同步一次就可以，因为总体`batch_size`对应的均值和方差可以通过每张GPU中计算得到的![img](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-08-17-13.png) 得到. 在反向传播时也一样需要同步一次梯度信息, 祥见论文[Context Encoding for Semantic Segmentation](https://arxiv.org/pdf/1803.08904.pdf)：
+跨卡同步BN的关键是在前向运算的时候拿到全局的均值和方差，在后向运算时候得到相应的全局梯度。 最简单的实现方法是先同步求均值，再发回各卡然后同步求方差，但是这样就同步了两次。实际上只需要同步一次就可以，因为总体`batch_size`对应的均值和方差可以通过每张GPU中计算得到的![img](/img/2019-08-17-13.png) 得到. 在反向传播时也一样需要同步一次梯度信息, 祥见论文[Context Encoding for Semantic Segmentation](https://arxiv.org/pdf/1803.08904.pdf)：
 
-![img](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-08-17-12.png)
+![img](/img/2019-08-17-12.png)
 
-![2019-08-17-3](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-08-17-3.jpg)
+![2019-08-17-3](/img/2019-08-17-3.jpg)
 
 这样在前向运算的时候，我们只需要在各卡上算出与，再跨卡求出全局的和即可得到正确的均值和方差， 同理我们在后向运算的时候只需同步一次，求出相应的梯度与。 我们在最近的论文[Context Encoding for Semantic Segmentation](https://link.zhihu.com/?target=https%3A//arxiv.org/pdf/1803.08904.pdf) 里面也分享了这种同步一次的方法。
 
@@ -87,7 +87,7 @@ y为BN层输出，此时归一化的均值与方差为当前mini-batch的均值�
 ### 2.5  SyncBN现有资源
 
 * [jianlong-yuan/syncbn-tensorflow](https://link.zhihu.com/?target=https%3A//github.com/jianlong-yuan/syncbn-tensorflow)重写了TensorFlow的官方方法，可以做个实验验证一下。
-* [旷视科技：CVPR 2018 | 旷视科技物体检测冠军论文——大型Mini-Batch检测器MegDet](https://zhuanlan.zhihu.com/p/37847559)
+* [旷视科技：CVPR 2018 旷视科技物体检测冠军论文——大型Mini-Batch检测器MegDet](https://zhuanlan.zhihu.com/p/37847559)
 * [tensorpack/tensorpack](https://link.zhihu.com/?target=https%3A//github.com/tensorpack/tensorpack/tree/master/examples/FasterRCNN)里面有该论文的代码实现。
 
 ## 3. some problems
