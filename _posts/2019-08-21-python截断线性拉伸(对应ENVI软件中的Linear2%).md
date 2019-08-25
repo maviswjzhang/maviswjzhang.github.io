@@ -10,10 +10,10 @@ catalog: true
 tags:
     - python
     - 图像处理
-	- ENVI
+    - ENVI
 ---
 
-**写在前面：**一点粗浅的理解和实现，如有不妥之处，请联系nickncc2122@gmail.com更改。
+**写在前面：** 一点粗浅的理解和实现，如有不妥之处，请联系nickncc2122@gmail.com更改。
 
 ## 1. 原理简介
 
@@ -61,7 +61,7 @@ plt.imshow(image_linear2)
 plt.show()
 ```
 
-![img](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-08-21-1.png)
+![img](/img/2019-08-21-1.png)
 
 ## 参考链接
 
