@@ -8,8 +8,8 @@ header-img: img/博客背景.jpg
 catalog: true
 tags:
     - Opencv
-	- python
-	- 传统图像处理
+    - Python
+    - 传统图像处理
 ---
 
 由于种种原因，图像中难免会存在噪声，需要对其去除。噪声可以理解为灰度值的随机变化，即拍照过程中引入的一些不想要的像素点。噪声可分为椒盐噪声，高斯噪声，加性噪声和乘性噪声等，参见：https://zhuanlan.zhihu.com/p/52889476
