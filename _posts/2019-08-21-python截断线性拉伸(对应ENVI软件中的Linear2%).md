@@ -8,12 +8,12 @@ author:     Nick
 header-img: img/博客背景.jpg
 catalog: true
 tags:
-    - python
+    - Python
     - 传统图像处理
-	- 遥感
+    - 遥感
 ---
 
-**写在前面：**一点粗浅的理解和实现，如有不妥之处，请联系nickncc2122@gmail.com更改。
+**写在前面：** 一点粗浅的理解和实现，如有不妥之处，请联系nickncc2122@gmail.com更改。
 
 ## 1. 原理简介
 
@@ -61,7 +61,7 @@ plt.imshow(image_linear2)
 plt.show()
 ```
 
-![img](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-08-21-1.png)
+![img](/img/2019-08-21-1.png)
 
 ## 参考链接
 
