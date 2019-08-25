@@ -7,7 +7,7 @@ author:     Nick
 header-img: img/博客背景.jpg
 catalog: true
 tags:
-    - 环境搭建
+    - 软件安装
 ---
 
 # 1. Colaboratory 简介

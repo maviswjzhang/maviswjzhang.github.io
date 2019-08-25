@@ -9,8 +9,8 @@ header-img: img/博客背景.jpg
 catalog: true
 tags:
     - python
-    - 图像处理
-	- ENVI
+    - 传统图像处理
+	- 遥感
 ---
 
 **写在前面：**一点粗浅的理解和实现，如有不妥之处，请联系nickncc2122@gmail.com更改。

@@ -7,7 +7,8 @@ author:     Nick
 header-img: img/博客背景.jpg
 catalog: true
 tags:
-    - 数据预处理
+    - 遥感
+	- 数据预处理
 ---
 
 #  1.问题描述：

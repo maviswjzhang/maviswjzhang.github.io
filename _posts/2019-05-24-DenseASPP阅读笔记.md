@@ -7,7 +7,8 @@ author:     Nick
 header-img: img/博客背景.jpg
 catalog: true
 tags:
-    - 论文阅读
+    - 语义分割
+	- 论文阅读
 ---
 
 ## 摘要：

@@ -8,7 +8,7 @@ author:     Nick
 header-img: img/博客背景.jpg
 catalog: true
 tags:
-    - Try
+    - MY FIRST
 ---
 
 ## Hey

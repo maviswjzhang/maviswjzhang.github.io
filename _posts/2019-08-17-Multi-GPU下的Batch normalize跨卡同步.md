@@ -10,6 +10,7 @@ catalog: true
 tags:
     - 语义分割
     - Training Tricks
+	- 网络结构
 ---
 
 ## 1. 为什么要跨卡同步 Batch Normalization
