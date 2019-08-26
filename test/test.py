@@ -143,23 +143,261 @@
 # plt.imshow(image_linear2)
 # plt.show()
 
-import matplotlib.pyplot as plt
-import cv2
+# mport matplotlib.pyplot as plti
+# import cv2
+# import numpy as np
+#
+#
+#
+# image = cv2.imread('image.png')
+# image = np.asarray(image, np.float32)
+# img1 = cv2.resize(image, (500, 500), interpolation=cv2.INTER_LINEAR)
+# print(img1)
+#
+#
+#
+#
+# plt.figure()
+# plt.subplot(121)
+# plt.imshow(image)
+# plt.subplot(122)
+# plt.imshow(img1)
+# plt.show()
+
+
+# # import cv2
+# import numpy as np
+# import matplotlib.pyplot as plt
+#
+# image = cv2.imread('lena512.bmp', 0)[200:400, 200:400]
+#
+# plt.figure()
+# for i, sigma_color in enumerate([10, 100, 200]):
+#     for j, sigma_space in enumerate([10, 100, 200]):
+#         bf_img = cv2.bilateralFilter(image, 9, sigma_color, sigma_space)
+#         plt.subplot(3, 3, i*3+j+1)
+#         plt.axis('off')
+#         plt.title('sigma_color: %d,sigma_space: %d' % (sigma_color, sigma_space))
+#         plt.imshow(bf_img, cmap='gray')
+#
+#
+# plt.show()
+#
 import numpy as np
+import cv2
+import sys
+import math
+import matplotlib.pyplot as plt
 
 
-
-image = cv2.imread('image.png')
-image = np.asarray(image, np.float32)
-img1 = cv2.resize(image, (500, 500), interpolation=cv2.INTER_LINEAR)
-print(img1)
+def distance(x, y, i, j):
+    return np.sqrt((x-i)**2 + (y-j)**2)
 
 
+def gaussian(x, sigma):
+    return (1.0 / (2 * math.pi * (sigma ** 2))) * math.exp(- (x ** 2) / (2 * sigma ** 2))
+
+def bilateral_filter_own(image, diameter, sigma_color, sigma_space):
+    width = image.shape[0]
+    height = image.shape[1]
+    radius = int(diameter / 2)
+    out_image = np.zeros_like(image)
+
+    for row in range(height):
+        for col in range(width):
+            current_pixel_filtered = 0
+            weight_sum = 0  # for normalize
+            for semi_row in range(-radius, radius + 1):
+                for semi_col in range(-radius, radius + 1):
+                    # calculate the convolution by traversing each close pixel within radius
+                    if row + semi_row >= 0 and row + semi_row < height:
+                        row_offset = row + semi_row
+                    else:
+                        row_offset = 0
+                    if semi_col + col >= 0 and semi_col + col < width:
+                        col_offset = col + semi_col
+                    else:
+                        col_offset = 0
+                    color_weight = gaussian(image[row_offset][col_offset] - image[row][col], sigma_color)
+                    space_weight = gaussian(distance(row_offset, col_offset, row, col), sigma_space)
+                    weight = space_weight * color_weight
+                    current_pixel_filtered += image[row_offset][col_offset] * weight
+                    weight_sum += weight
+
+            current_pixel_filtered = current_pixel_filtered / weight_sum
+            out_image[row, col] = int(round(current_pixel_filtered))
+
+    return out_image
 
 
-plt.figure()
-plt.subplot(121)
-plt.imshow(image)
-plt.subplot(122)
-plt.imshow(img1)
-plt.show()
+if __name__ == "__main__":
+    image = cv2.imread('lena512.bmp', 0)[200:400, 200:400]
+    plt.figure()
+    for i, sigma_color in enumerate([10, 100, 200]):
+        for j, sigma_space in enumerate([10, 100, 200]):
+            bf_img = bilateral_filter_own(image, 9, sigma_color, sigma_space)
+            plt.subplot(3, 3, i*3+j+1)
+            plt.axis('off')
+            plt.title('sigma_color: %d,sigma_space: %d' % (sigma_color, sigma_space))
+            plt.imshow(bf_img, cmap='gray')
+    plt.show()
+
+
+# import cv2
+# import math
+# from time import clock
+# import matplotlib.pyplot as plt
+# import numpy as np
+#
+#
+# class BilateralFilter(object):
+#     """ the bilateral filter class here.
+#         It can build distance weight table and similarity weight table,
+#         load image, and filting it with these two table, then return the filted image.
+#         Attributes:
+#             factor: the factor of power of e.
+#             ds: distance sigma, which denominator of delta in c.
+#             rs: range sigma, which denominator of delta in s.
+#             c_weight_table: the gaussian weight table of Euclidean distance,
+#         which namly c.
+#             s_weight_table: the gaussian weight table of The similarity function,
+#         which namly s.
+#             radius: half length of Gaussian kernel.
+#         """
+#
+#     def __init__(self, diameter, sigma_color, sigma_space):
+#         """init the bilateral filter class with the input args"""
+#         self.sigma_space = sigma_space
+#         self.sigma_color = sigma_color
+#         self.space_weight_table = []
+#         self.color_weight_table = []
+#         self.radius = int(diameter/2)
+#
+#     def gaussian(self, x, sigma):
+#         return (1.0 / (2 * math.pi * (sigma ** 2))) * math.exp(- (x ** 2) / (2 * sigma ** 2))
+#
+#     def build_distance_weight_table(self):
+#         """bulid the c_weight_table with radius and ds"""
+#         for semi_row in range(-self.radius, self.radius + 1):
+#             self.space_weight_table.append([])
+#             for semi_col in range(-self.radius, self.radius + 1):
+#                 # calculate Euclidean distance between center point and close pixels
+#                 dis = math.sqrt(semi_row * semi_row + semi_col * semi_col)
+#                 space_weight = self.gaussian(dis, self.sigma_space)
+#                 self.space_weight_table[semi_row + self.radius].append(space_weight)
+#
+#     def build_similarity_weight_table(self):
+#         """build the s_weight_table with rs"""
+#         for i in range(256):  # since the color scope is 0 ~ 255
+#             color_weight = self.gaussian(i, self.sigma_color)
+#             self.color_weight_table.append(color_weight)
+#
+#
+#     def clamp(self, p):
+#         """return RGB color between 0 and 255"""
+#         if p < 0:
+#             return 0
+#         elif p > 255:
+#             return 255
+#         else:
+#             return p
+#
+#     def bilateral_filter(self, image):
+#         """ the bilateral filter method.
+#         Args:
+#                 image: source image
+#         Returns:
+#                 dest: destination image after filting.
+#         """
+#
+#         width = image.shape[0]
+#         height = image.shape[1]
+#         radius = self.radius
+#         self.build_distance_weight_table()
+#         self.build_similarity_weight_table()
+#         out_image = np.zeros_like(image)
+#         red_sum = green_sum = blue_sum = 0  # 各通道亮度值加权和
+#         cs_sum_red_weight = cs_sum_green_weight = cs_sum_blue_weight = 0  # 各通道权值之和，用来归一化
+#         pixel_num = height * width
+#
+#         for row in range(height):
+#             for col in range(width):
+#                 # calculate for each pixel
+#                 tr = image[row, col, 0]
+#                 tg = image[row, col, 1]
+#                 tb = image[row, col, 2]
+#                 for semi_row in range(-radius, radius + 1):
+#                     for semi_col in range(-radius, radius + 1):
+#                         # calculate the convolution by traversing each close pixel within radius
+#                         if row + semi_row >= 0 and row + semi_row < height:
+#                             row_offset = row + semi_row
+#                         else:
+#                             row_offset = 0
+#                         if semi_col + col >= 0 and semi_col + col < width:
+#                             col_offset = col + semi_col
+#                         else:
+#                             col_offset = 0
+#                         tr2 = image[row_offset, col_offset, 0]
+#                         tg2 = image[row_offset, col_offset, 1]
+#                         tb2 = image[row_offset, col_offset, 2]
+#
+#                         cs_red_weight = (
+#                                 self.space_weight_table[semi_row + radius][semi_col + radius]
+#                                 * self.color_weight_table[(abs(tr2 - tr))]
+#                         )
+#                         cs_green_weight = (
+#                                 self.space_weight_table[semi_row + radius][semi_col + radius]
+#                                 * self.color_weight_table[(abs(tg2 - tg))]
+#                         )
+#                         cs_blue_weight = (
+#                                 self.space_weight_table[semi_row + radius][semi_col + radius]
+#                                 * self.color_weight_table[(abs(tb2 - tb))]
+#                         )
+#
+#                         cs_sum_red_weight += cs_red_weight
+#                         cs_sum_blue_weight += cs_blue_weight
+#                         cs_sum_green_weight += cs_green_weight
+#
+#                         red_sum += cs_red_weight * float(tr2)
+#                         green_sum += cs_green_weight * float(tg2)
+#                         blue_sum += cs_blue_weight * float(tb2)
+#
+#                 # normalization
+#                 tr = int(math.floor(red_sum / cs_sum_red_weight))
+#                 tg = int(math.floor(green_sum / cs_sum_green_weight))
+#                 tb = int(math.floor(blue_sum / cs_sum_blue_weight))
+#
+#                 out_image[row, col, 0] = self.clamp(tr)
+#                 out_image[row, col, 1] = self.clamp(tg)
+#                 out_image[row, col, 2] = self.clamp(tb)
+#
+#
+#                 index = row * width + col + 1
+#                 percent = float(index) * 100 / pixel_num
+#                 time1 = clock()
+#                 used_time = time1 - time0
+#                 format = "proceseeing %d of %d pixels, finished %.2f%%, used %.2f second."
+#                 print(format % (index, pixel_num, percent, used_time))
+#
+#                 # clean value for next time
+#                 red_sum = green_sum = blue_sum = 0
+#                 cs_sum_red_weight = cs_sum_blue_weight = cs_sum_green_weight = 0
+#
+#         return out_image
+#
+#
+# if __name__ == "__main__":
+#     image = cv2.imread('lena512.bmp')[200:400, 200:400, :]
+#     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+#     plt.figure()
+#     for i, sigma_color in enumerate([10, 100, 200]):
+#         for j, sigma_space in enumerate([10, 100, 200]):
+#             global time0
+#             time0 = clock()
+#             bf = BilateralFilter(9, sigma_color, sigma_space)
+#             bf_img = bf.bilateral_filter(image)
+#             plt.subplot(3, 3, i*3+j+1)
+#             plt.axis('off')
+#             plt.title('sigma_color: %d,sigma_space: %d' % (sigma_color, sigma_space))
+#             plt.imshow(bf_img)
+#     plt.show()
