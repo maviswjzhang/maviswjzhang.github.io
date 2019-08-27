@@ -23,13 +23,13 @@ Non-Local Means顾名思义，这是一种非局部平均算法。何为局部�
 
 NL-Means的滤波过程可以用下面公式来表示：
 
-![img](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-08-26-2.png)
+![img](/img/2019-08-26-2.png)
 
 v代表噪声图像，NL[v]代表恢复图像，对于恢复图像中的任意一个像素i，其实通过图像中所有像素的加权平均得到的，也就是w，w代表了当前像素和其余像素的相似程度。衡量相似度的方法有很多，最常用的是根据两个像素亮度差值的平方来估计。由于有噪声，单独的一个像素并不可靠，所以使用它们的邻域，只有邻域相似度高才能说这两个像素的相似度高。衡量两个图像块的相似度最常用的方法是计算他们之间的欧氏距离：
 
-![img](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-08-26-3.png)
+![img](/img/2019-08-26-3.png)
 
-![img](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-08-26-4.png)
+![img](/img/2019-08-26-4.png)
 
 其中 a 是高斯核的标准差。在求欧式距离的时候，不同位置的像素的权重是不一样的，距离块的中心越近，权重越大，距离中心越远，权重越小，权重服从高斯分布。实际计算中考虑到计算量的问题，常常采用均匀分布的权重。
 
@@ -41,7 +41,7 @@ v代表噪声图像，NL[v]代表恢复图像，对于恢复图像中的任意�
 
 ***这里图片中的红色方框是我后期自己加的，他应该是以p点为中心的，示意图，就没那么严格***
 
-![img](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-08-26-5.png)
+![img](/img/2019-08-26-5.png)
 
 ## 3. python opencv实现
 
@@ -69,7 +69,7 @@ plt.imshow(out_image)
 plt.show()  
 ```
 
-![img](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-08-26-1.png)
+![img](/img/2019-08-26-1.png)
 
 ## 4. 纯python 实现
 
@@ -164,4 +164,4 @@ if __name__ == "__main__":
     plt.show()
 ```
 
-![img](C:\Users\CV\Documents\GitHub\niecongchong.github.io\img\2019-08-26-6.png)
+![img](/img/2019-08-26-6.png)
