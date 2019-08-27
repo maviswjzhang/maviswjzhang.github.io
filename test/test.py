@@ -183,64 +183,64 @@
 #
 # plt.show()
 #
-import numpy as np
-import cv2
-import sys
-import math
-import matplotlib.pyplot as plt
-
-
-def distance(x, y, i, j):
-    return np.sqrt((x-i)**2 + (y-j)**2)
-
-
-def gaussian(x, sigma):
-    return (1.0 / (2 * math.pi * (sigma ** 2))) * math.exp(- (x ** 2) / (2 * sigma ** 2))
-
-def bilateral_filter_own(image, diameter, sigma_color, sigma_space):
-    width = image.shape[0]
-    height = image.shape[1]
-    radius = int(diameter / 2)
-    out_image = np.zeros_like(image)
-
-    for row in range(height):
-        for col in range(width):
-            current_pixel_filtered = 0
-            weight_sum = 0  # for normalize
-            for semi_row in range(-radius, radius + 1):
-                for semi_col in range(-radius, radius + 1):
-                    # calculate the convolution by traversing each close pixel within radius
-                    if row + semi_row >= 0 and row + semi_row < height:
-                        row_offset = row + semi_row
-                    else:
-                        row_offset = 0
-                    if semi_col + col >= 0 and semi_col + col < width:
-                        col_offset = col + semi_col
-                    else:
-                        col_offset = 0
-                    color_weight = gaussian(image[row_offset][col_offset] - image[row][col], sigma_color)
-                    space_weight = gaussian(distance(row_offset, col_offset, row, col), sigma_space)
-                    weight = space_weight * color_weight
-                    current_pixel_filtered += image[row_offset][col_offset] * weight
-                    weight_sum += weight
-
-            current_pixel_filtered = current_pixel_filtered / weight_sum
-            out_image[row, col] = int(round(current_pixel_filtered))
-
-    return out_image
-
-
-if __name__ == "__main__":
-    image = cv2.imread('lena512.bmp', 0)[200:400, 200:400]
-    plt.figure()
-    for i, sigma_color in enumerate([10, 100, 200]):
-        for j, sigma_space in enumerate([10, 100, 200]):
-            bf_img = bilateral_filter_own(image, 9, sigma_color, sigma_space)
-            plt.subplot(3, 3, i*3+j+1)
-            plt.axis('off')
-            plt.title('sigma_color: %d,sigma_space: %d' % (sigma_color, sigma_space))
-            plt.imshow(bf_img, cmap='gray')
-    plt.show()
+# import numpy as np
+# import cv2
+# import sys
+# import math
+# import matplotlib.pyplot as plt
+#
+#
+# def distance(x, y, i, j):
+#     return np.sqrt((x-i)**2 + (y-j)**2)
+#
+#
+# def gaussian(x, sigma):
+#     return (1.0 / (2 * math.pi * (sigma ** 2))) * math.exp(- (x ** 2) / (2 * sigma ** 2))
+#
+# def bilateral_filter_own(image, diameter, sigma_color, sigma_space):
+#     width = image.shape[0]
+#     height = image.shape[1]
+#     radius = int(diameter / 2)
+#     out_image = np.zeros_like(image)
+#
+#     for row in range(height):
+#         for col in range(width):
+#             current_pixel_filtered = 0
+#             weight_sum = 0  # for normalize
+#             for semi_row in range(-radius, radius + 1):
+#                 for semi_col in range(-radius, radius + 1):
+#                     # calculate the convolution by traversing each close pixel within radius
+#                     if row + semi_row >= 0 and row + semi_row < height:
+#                         row_offset = row + semi_row
+#                     else:
+#                         row_offset = 0
+#                     if semi_col + col >= 0 and semi_col + col < width:
+#                         col_offset = col + semi_col
+#                     else:
+#                         col_offset = 0
+#                     color_weight = gaussian(image[row_offset][col_offset] - image[row][col], sigma_color)
+#                     space_weight = gaussian(distance(row_offset, col_offset, row, col), sigma_space)
+#                     weight = space_weight * color_weight
+#                     current_pixel_filtered += image[row_offset][col_offset] * weight
+#                     weight_sum += weight
+#
+#             current_pixel_filtered = current_pixel_filtered / weight_sum
+#             out_image[row, col] = int(round(current_pixel_filtered))
+#
+#     return out_image
+#
+#
+# if __name__ == "__main__":
+#     image = cv2.imread('lena512.bmp', 0)[200:400, 200:400]
+#     plt.figure()
+#     for i, sigma_color in enumerate([10, 100, 200]):
+#         for j, sigma_space in enumerate([10, 100, 200]):
+#             bf_img = bilateral_filter_own(image, 9, sigma_color, sigma_space)
+#             plt.subplot(3, 3, i*3+j+1)
+#             plt.axis('off')
+#             plt.title('sigma_color: %d,sigma_space: %d' % (sigma_color, sigma_space))
+#             plt.imshow(bf_img, cmap='gray')
+#     plt.show()
 
 
 # import cv2
@@ -401,3 +401,141 @@ if __name__ == "__main__":
 #             plt.title('sigma_color: %d,sigma_space: %d' % (sigma_color, sigma_space))
 #             plt.imshow(bf_img)
 #     plt.show()
+
+# import cv2,datetime,sys,glob
+# import numpy as np
+# import  matplotlib.pyplot as plt
+# import matplotlib.cm as cm
+#
+# def double2uint8(I,ratio=1.0):
+#     return np.clip(np.round(I*ratio),0,255).astype(np.uint8)
+#
+# def GetNlmData(I,templateWindowSize=4,searchWindow=9):
+#     f=int(templateWindowSize/2)
+#     t=int(searchWindow/2)
+#     height,width=I.shape[:2]
+#     padLength=t+f
+#     I2=np.pad(I,padLength,'symmetric')  # 滑动时边界，将边缘对称折叠上去
+#     I_=I2[padLength-f:padLength+f+height,padLength-f:padLength+f+width] #注意边界
+#
+#     res=np.zeros((height,width,templateWindowSize+2,t+t+1,t+t+1))  # 有问题？%这段主要是控制不超出索引值
+#     # 其实主要是将各种参数放到一个矩阵中，便于计算
+#     for i in range(-t,t+1):  # 大的滑动窗
+#         for j in range(-t,t+1):
+#             I2_=I2[padLength+i-f:padLength+i+f+height,padLength+j-f:padLength+f+j+width]  # 某个图像块
+#             for kk in range(templateWindowSize):  # 计算得到一个高斯核,分布权重
+#                 kernel=np.ones((2*kk+1,2*kk+1))
+#                 kernel=kernel/kernel.sum()  # 进行归一化
+#                 res[:, :, kk, i+t, j+t] = cv2.filter2D((I2_-I_)**2,-1,kernel)[f:f+height,f+width]
+#             res[:,:,-2,i+t,j+t]=I2_[f:f+height,f:f+width]-I
+#             res[:,:,-1,i+t,j+t]=np.exp(-np.sqrt(i**2+j**2))
+#     print(res.max(),res.min())
+#     return res
+#
+# if __name__ == "__main__":
+#     image = cv2.imread('lena512.bmp')
+#     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+#     noise_image = double2uint8(image + np.random.randn(*image.shape) * 20)
+#     plt.figure()
+#     plt.subplot(131)
+#     plt.axis('off')
+#     plt.imshow(image)
+#     plt.subplot(132)
+#     plt.axis('off')
+#     plt.imshow(noise_image)
+#     out_image = cv2.fastNlMeansDenoisingColored(image, h=10, hColor=10)  # GetNlmData(noise_image.astype(np.double)/255)
+#     plt.subplot(133)
+#     plt.axis('off')
+#     plt.imshow(out_image)
+#     plt.show()
+
+import cv2
+import scipy as sc
+from scipy import ndimage
+import numpy as np
+from matplotlib import pyplot as plt
+
+
+def double2uint8(I, ratio=1.0):
+    return np.clip(np.round(I*ratio),0,255).astype(np.uint8)
+
+def gaussian(l, sig):
+    # Generate array
+    ax = np.arange(-l // 2 + 1., l // 2 + 1.)
+    # Generate 2D matrices by duplicating ax along two axes
+    xx, yy = np.meshgrid(ax, ax)
+    # kernel will be the gaussian over the 2D arrays
+    kernel = np.exp(-(xx**2 + yy**2) / (2. * sig**2))
+    # Normalise the kernel
+    final = kernel / kernel.sum()
+    return final
+
+
+def clamp(p):
+    """return RGB color between 0 and 255"""
+    if p < 0:
+        return 0
+    elif p > 255:
+        return 255
+    else:
+        return p
+
+
+def means_filter(image, h=10, templateWindowSize=7, searchWindow=21):
+    height, width = image.shape[0], image.shape[1]
+    template_radius = int(templateWindowSize / 2)
+    search_radius = int(searchWindow / 2)
+
+    # Padding the image
+    padLength = template_radius + search_radius
+    img = cv2.copyMakeBorder(image, padLength, padLength, padLength, padLength, cv2.BORDER_CONSTANT, value=255)
+
+    # output image
+    out_image = np.zeros((height, width), dtype='float')
+
+    # generate gaussian kernel matrix of 7*7
+    kernel = gaussian(templateWindowSize, 1)
+
+    # Run the non-local means for each pixel
+    for row in range(height):
+        for col in range(width):
+            pad_row = row + padLength
+            pad_col = col + padLength
+            center_patch = img[pad_row - template_radius: pad_row + template_radius + 1, pad_col - template_radius: pad_col + template_radius + 1]
+
+            sum_pixel_value = 0
+            sum_weight = 0
+
+            # Apply Gaussian weighted square distance between patches of 7*7 in a window of 21*21
+            for r in range(pad_row - search_radius, pad_row + search_radius):
+                for c in range(pad_col - search_radius, pad_col + search_radius):
+                    other_patch = img[r - template_radius: r + template_radius + 1, c - template_radius: c + template_radius + 1]
+                    diff = center_patch - other_patch
+                    distance_2 = np.multiply(diff, diff)
+                    pixel_weight = np.sum(np.multiply(kernel, distance_2))
+
+                    pixel_weight = np.exp(pixel_weight / (h**2))
+                    sum_weight = sum_weight + pixel_weight
+                    sum_pixel_value = sum_pixel_value + pixel_weight * img[r, c]
+
+            out_image[row, col] = clamp(int(sum_pixel_value / sum_weight))
+    return out_image
+
+# Call means_filter for the input image
+if __name__ == "__main__":
+    image = cv2.imread('lena512.bmp', 0)
+    noise_image = double2uint8(image + np.random.randn(*image.shape) * 20)
+    mean_image = means_filter(image, h=10, templateWindowSize=7, searchWindow=5)
+    plt.figure()
+    plt.subplot(131)
+    plt.axis('off')
+    plt.imshow(image, cmap='gray')
+    plt.subplot(132)
+    plt.axis('off')
+    plt.imshow(noise_image, cmap='gray')
+    plt.subplot(133)
+    plt.axis('off')
+    plt.imshow(mean_image, cmap='gray')
+    plt.show()
+
+
