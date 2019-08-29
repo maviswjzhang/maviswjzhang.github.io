@@ -539,120 +539,219 @@
 #     plt.show()
 
 
+# import numpy as np
+# import math
+# import scipy.signal, scipy.interpolate
+# import matplotlib.pyplot as plt
+# import cv2
+#
+#
+#
+# def bilateral_approximation(image, sigmaS, sigmaR, samplingS=None, samplingR=None):
+#     # It is derived from Jiawen Chen's matlab implementation
+#     # The original papers and matlab code are available at http://people.csail.mit.edu/sparis/bf/
+#
+#     # --------------- 原始分辨率 --------------- #
+#     inputHeight = image.shape[0]
+#     inputWidth = image.shape[1]
+#     sigmaS = sigmaS
+#     sigmaR = sigmaR
+#     samplingS = sigmaS if (samplingS is None) else samplingS
+#     samplingR = sigmaR if (samplingR is None) else samplingR
+#     edgeMax = np.amax(image)
+#     edgeMin = np.amin(image)
+#     edgeDelta = edgeMax - edgeMin
+#
+#
+#     # --------------- 下采样 --------------- #
+#     derivedSigmaS = sigmaS / samplingS
+#     derivedSigmaR = sigmaR / samplingR
+#
+#     paddingXY = math.floor(2 * derivedSigmaS) + 1
+#     paddingZ = math.floor(2 * derivedSigmaR) + 1
+#
+#     downsampledWidth = int(round((inputWidth - 1) / samplingS) + 1 + 2 * paddingXY)
+#     downsampledHeight = int(round((inputHeight - 1) / samplingS) + 1 + 2 * paddingXY)
+#     downsampledDepth = int(round(edgeDelta / samplingR) + 1 + 2 * paddingZ)
+#
+#     wi = np.zeros((downsampledHeight, downsampledWidth, downsampledDepth))
+#     w = np.zeros((downsampledHeight, downsampledWidth, downsampledDepth))
+#
+#     # 下采样索引
+#     (ygrid, xgrid) = np.meshgrid(range(inputWidth), range(inputHeight))
+#
+#     dimx = np.around(xgrid / samplingS) + paddingXY
+#     dimy = np.around(ygrid / samplingS) + paddingXY
+#     dimz = np.around((image - edgeMin) / samplingR) + paddingZ
+#
+#     flat_image = image.flatten()
+#     flatx = dimx.flatten()
+#     flaty = dimy.flatten()
+#     flatz = dimz.flatten()
+#
+#     # 盒式滤波器（平均下采样）
+#     for k in range(dimz.size):
+#         image_k = flat_image[k]
+#         dimx_k = int(flatx[k])
+#         dimy_k = int(flaty[k])
+#         dimz_k = int(flatz[k])
+#
+#         wi[dimx_k, dimy_k, dimz_k] += image_k
+#         w[dimx_k, dimy_k, dimz_k] += 1
+#
+#
+#     # ---------------  三维卷积 --------------- #
+#     # 生成卷积核
+#     kernelWidth = 2 * derivedSigmaS + 1
+#     kernelHeight = kernelWidth
+#     kernelDepth = 2 * derivedSigmaR + 1
+#
+#     halfKernelWidth = math.floor(kernelWidth / 2)
+#     halfKernelHeight = math.floor(kernelHeight / 2)
+#     halfKernelDepth = math.floor(kernelDepth / 2)
+#
+#     (gridX, gridY, gridZ) = np.meshgrid(range(int(kernelWidth)), range(int(kernelHeight)), range(int(kernelDepth)))
+#     # 平移，使得中心为0
+#     gridX -= halfKernelWidth
+#     gridY -= halfKernelHeight
+#     gridZ -= halfKernelDepth
+#     gridRSquared = ((gridX * gridX + gridY * gridY) / (derivedSigmaS * derivedSigmaS)) + \
+#                    ((gridZ * gridZ) / (derivedSigmaR * derivedSigmaR))
+#     kernel = np.exp(-0.5 * gridRSquared)
+#
+#     # 卷积
+#     blurredGridData = scipy.signal.fftconvolve(wi, kernel, mode='same')
+#     blurredGridWeights = scipy.signal.fftconvolve(w, kernel, mode='same')
+#
+#     # ---------------  divide --------------- #
+#     blurredGridWeights = np.where(blurredGridWeights == 0, -2, blurredGridWeights)  # avoid divide by 0, won't read there anyway
+#     normalizedBlurredGrid = blurredGridData / blurredGridWeights
+#     normalizedBlurredGrid = np.where(blurredGridWeights < -1, 0, normalizedBlurredGrid)  # put 0s where it's undefined
+#
+#
+#     # --------------- 上采样 --------------- #
+#     (ygrid, xgrid) = np.meshgrid(range(inputWidth), range(inputHeight))
+#
+#     # 上采样索引
+#     dimx = (xgrid / samplingS) + paddingXY
+#     dimy = (ygrid / samplingS) + paddingXY
+#     dimz = (image - edgeMin) / samplingR + paddingZ
+#
+#     out_image = scipy.interpolate.interpn((range(normalizedBlurredGrid.shape[0]),
+#                                            range(normalizedBlurredGrid.shape[1]),
+#                                            range(normalizedBlurredGrid.shape[2])),
+#                                           normalizedBlurredGrid,
+#                                           (dimx, dimy, dimz))
+#     return out_image
+#
+#
+# if __name__ == "__main__":
+#     image = cv2.imread('lena512.bmp', 0)
+#     mean_image = bilateral_approximation(image, sigmaS=64, sigmaR=32, samplingS=32, samplingR=16)
+#     plt.figure()
+#     plt.subplot(121)
+#     plt.axis('off')
+#     plt.imshow(image, cmap='gray')
+#     plt.subplot(122)
+#     plt.axis('off')
+#     plt.imshow(mean_image, cmap='gray')
+#     plt.show()
+
+
+
 import numpy as np
-import math
-import scipy.signal, scipy.interpolate
-import matplotlib.pyplot as plt
 import cv2
+import math
+import matplotlib.pyplot as plt
 
 
-
-def bilateral_approximation(image, sigmaS, sigmaR, samplingS=None, samplingR=None):
-    # It is derived from Jiawen Chen's matlab implementation
-    # The original papers and matlab code are available at http://people.csail.mit.edu/sparis/bf/
-
-    # --------------- 原始分辨率 --------------- #
-    inputHeight = image.shape[0]
-    inputWidth = image.shape[1]
-    sigmaS = sigmaS
-    sigmaR = sigmaR
-    samplingS = sigmaS if (samplingS is None) else samplingS
-    samplingR = sigmaR if (samplingR is None) else samplingR
-    edgeMax = np.amax(image)
-    edgeMin = np.amin(image)
-    edgeDelta = edgeMax - edgeMin
+def distance(x, y, i, j):
+    return np.sqrt((x-i)**2 + (y-j)**2)
 
 
-    # --------------- 下采样 --------------- #
-    derivedSigmaS = sigmaS / samplingS
-    derivedSigmaR = sigmaR / samplingR
-
-    paddingXY = math.floor(2 * derivedSigmaS) + 1
-    paddingZ = math.floor(2 * derivedSigmaR) + 1
-
-    downsampledWidth = int(round((inputWidth - 1) / samplingS) + 1 + 2 * paddingXY)
-    downsampledHeight = int(round((inputHeight - 1) / samplingS) + 1 + 2 * paddingXY)
-    downsampledDepth = int(round(edgeDelta / samplingR) + 1 + 2 * paddingZ)
-
-    wi = np.zeros((downsampledHeight, downsampledWidth, downsampledDepth))
-    w = np.zeros((downsampledHeight, downsampledWidth, downsampledDepth))
-
-    # 下采样索引
-    (ygrid, xgrid) = np.meshgrid(range(inputWidth), range(inputHeight))
-
-    dimx = np.around(xgrid / samplingS) + paddingXY
-    dimy = np.around(ygrid / samplingS) + paddingXY
-    dimz = np.around((image - edgeMin) / samplingR) + paddingZ
-
-    flat_image = image.flatten()
-    flatx = dimx.flatten()
-    flaty = dimy.flatten()
-    flatz = dimz.flatten()
-
-    # 盒式滤波器（平均下采样）
-    for k in range(dimz.size):
-        image_k = flat_image[k]
-        dimx_k = int(flatx[k])
-        dimy_k = int(flaty[k])
-        dimz_k = int(flatz[k])
-
-        wi[dimx_k, dimy_k, dimz_k] += image_k
-        w[dimx_k, dimy_k, dimz_k] += 1
+def gaussian(x, sigma):
+    return (1.0 / (2 * math.pi * (sigma ** 2))) * math.exp(- (x ** 2) / (2 * sigma ** 2))
 
 
-    # ---------------  三维卷积 --------------- #
-    # 生成卷积核
-    kernelWidth = 2 * derivedSigmaS + 1
-    kernelHeight = kernelWidth
-    kernelDepth = 2 * derivedSigmaR + 1
+def joint_bilateral_filter(image, reference_image, diameter, sigma_color, sigma_space):
+    assert image.shape == reference_image.shape
+    width = image.shape[0]
+    height = image.shape[1]
+    radius = int(diameter / 2)
+    out_image = np.zeros_like(image)
 
-    halfKernelWidth = math.floor(kernelWidth / 2)
-    halfKernelHeight = math.floor(kernelHeight / 2)
-    halfKernelDepth = math.floor(kernelDepth / 2)
+    print('===============START=================')
+    for row in range(height):
+        for col in range(width):
+            current_pixel_filtered = 0
+            weight_sum = 0  # for normalize
+            for semi_row in range(-radius, radius + 1):
+                for semi_col in range(-radius, radius + 1):
+                    # calculate the convolution by traversing each close pixel within radius
+                    if row + semi_row >= 0 and row + semi_row < height:
+                        row_offset = row + semi_row
+                    else:
+                        row_offset = 0
+                    if semi_col + col >= 0 and semi_col + col < width:
+                        col_offset = col + semi_col
+                    else:
+                        col_offset = 0
+                    color_weight = gaussian(reference_image[row_offset][col_offset] - reference_image[row][col], sigma_color)
+                    space_weight = gaussian(distance(row_offset, col_offset, row, col), sigma_space)
+                    weight = space_weight * color_weight
+                    current_pixel_filtered += image[row_offset][col_offset] * weight
+                    weight_sum += weight
 
-    (gridX, gridY, gridZ) = np.meshgrid(range(int(kernelWidth)), range(int(kernelHeight)), range(int(kernelDepth)))
-    # 平移，使得中心为0
-    gridX -= halfKernelWidth
-    gridY -= halfKernelHeight
-    gridZ -= halfKernelDepth
-    gridRSquared = ((gridX * gridX + gridY * gridY) / (derivedSigmaS * derivedSigmaS)) + \
-                   ((gridZ * gridZ) / (derivedSigmaR * derivedSigmaR))
-    kernel = np.exp(-0.5 * gridRSquared)
-
-    # 卷积
-    blurredGridData = scipy.signal.fftconvolve(wi, kernel, mode='same')
-    blurredGridWeights = scipy.signal.fftconvolve(w, kernel, mode='same')
-
-    # ---------------  divide --------------- #
-    blurredGridWeights = np.where(blurredGridWeights == 0, -2, blurredGridWeights)  # avoid divide by 0, won't read there anyway
-    normalizedBlurredGrid = blurredGridData / blurredGridWeights
-    normalizedBlurredGrid = np.where(blurredGridWeights < -1, 0, normalizedBlurredGrid)  # put 0s where it's undefined
-
-
-    # --------------- 上采样 --------------- #
-    (ygrid, xgrid) = np.meshgrid(range(inputWidth), range(inputHeight))
-
-    # 上采样索引
-    dimx = (xgrid / samplingS) + paddingXY
-    dimy = (ygrid / samplingS) + paddingXY
-    dimz = (image - edgeMin) / samplingR + paddingZ
-
-    out_image = scipy.interpolate.interpn((range(normalizedBlurredGrid.shape[0]),
-                                           range(normalizedBlurredGrid.shape[1]),
-                                           range(normalizedBlurredGrid.shape[2])),
-                                          normalizedBlurredGrid,
-                                          (dimx, dimy, dimz))
+            current_pixel_filtered = current_pixel_filtered / weight_sum
+            out_image[row, col] = int(round(current_pixel_filtered))
+    print('===============FINISH=================')
     return out_image
 
 
+
 if __name__ == "__main__":
-    image = cv2.imread('lena512.bmp', 0)
-    mean_image = bilateral_approximation(image, sigmaS=64, sigmaR=32, samplingS=32, samplingR=16)
+    image = cv2.imread('lena512.bmp', 0)[200:400, 200:400]
+    blur_img = cv2.resize(image, (25, 25))
+    blur_img = cv2.resize(blur_img, (200, 200))
     plt.figure()
     plt.subplot(121)
     plt.axis('off')
-    plt.imshow(image, cmap='gray')
+    plt.title('blur image')
+    plt.imshow(blur_img, cmap='gray')
     plt.subplot(122)
     plt.axis('off')
-    plt.imshow(mean_image, cmap='gray')
+    plt.title('original image')
+    plt.imshow(image, cmap='gray')
     plt.show()
+    plt.figure()
+    for i, sigma_color in enumerate([10, 100, 200]):
+        for j, sigma_space in enumerate([10, 100, 200]):
+            bf_img = joint_bilateral_filter(blur_img, image, 9, sigma_color, sigma_space)
+            plt.subplot(3, 3, i*3+j+1)
+            plt.axis('off')
+            plt.title('sigma_color: %d,sigma_space: %d' % (sigma_color, sigma_space))
+            plt.imshow(bf_img, cmap='gray')
+    plt.show()
+
+# import numpy as np
+# import cv2
+# import math
+# import matplotlib.pyplot as plt
+#
+# if __name__ == "__main__":
+#     image = cv2.imread('lena512.bmp', 0)[200:400, 200:400]
+#     blur_img = cv2.resize(image, (25, 25))
+#     blur_img = cv2.resize(blur_img, (200, 200))
+#     plt.imshow(blur_img)
+#     plt.show()
+#     plt.figure()
+#     for i, sigma_color in enumerate([10, 100, 200]):
+#         for j, sigma_space in enumerate([10, 100, 200]):
+#             bf_img = cv2.ximgproc.jointBilateralFilter(blur_img, image, 9, sigma_color, sigma_space)
+#             plt.subplot(3, 3, i*3+j+1)
+#             plt.axis('off')
+#             plt.title('sigma_color: %d,sigma_space: %d' % (sigma_color, sigma_space))
+#             plt.imshow(bf_img, cmap='gray')
+#     plt.show()
+
+cv2.bilateralFilter()
