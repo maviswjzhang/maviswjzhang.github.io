@@ -449,93 +449,210 @@
 #     plt.imshow(out_image)
 #     plt.show()
 
-import cv2
-import scipy as sc
-from scipy import ndimage
+# import cv2
+# import scipy as sc
+# from scipy import ndimage
+# import numpy as np
+# from matplotlib import pyplot as plt
+#
+#
+# def double2uint8(I, ratio=1.0):
+#     return np.clip(np.round(I*ratio),0,255).astype(np.uint8)
+#
+# def gaussian(l, sig):
+#     # Generate array
+#     ax = np.arange(-l // 2 + 1., l // 2 + 1.)
+#     # Generate 2D matrices by duplicating ax along two axes
+#     xx, yy = np.meshgrid(ax, ax)
+#     # kernel will be the gaussian over the 2D arrays
+#     kernel = np.exp(-(xx**2 + yy**2) / (2. * sig**2))
+#     # Normalise the kernel
+#     final = kernel / kernel.sum()
+#     return final
+#
+#
+# def clamp(p):
+#     """return RGB color between 0 and 255"""
+#     if p < 0:
+#         return 0
+#     elif p > 255:
+#         return 255
+#     else:
+#         return p
+#
+#
+# def means_filter(image, h=10, templateWindowSize=7, searchWindow=21):
+#     height, width = image.shape[0], image.shape[1]
+#     template_radius = int(templateWindowSize / 2)
+#     search_radius = int(searchWindow / 2)
+#
+#     # Padding the image
+#     padLength = template_radius + search_radius
+#     img = cv2.copyMakeBorder(image, padLength, padLength, padLength, padLength, cv2.BORDER_CONSTANT, value=255)
+#
+#     # output image
+#     out_image = np.zeros((height, width), dtype='float')
+#
+#     # generate gaussian kernel matrix of 7*7
+#     kernel = gaussian(templateWindowSize, 1)
+#
+#     # Run the non-local means for each pixel
+#     for row in range(height):
+#         for col in range(width):
+#             pad_row = row + padLength
+#             pad_col = col + padLength
+#             center_patch = img[pad_row - template_radius: pad_row + template_radius + 1, pad_col - template_radius: pad_col + template_radius + 1]
+#
+#             sum_pixel_value = 0
+#             sum_weight = 0
+#
+#             # Apply Gaussian weighted square distance between patches of 7*7 in a window of 21*21
+#             for r in range(pad_row - search_radius, pad_row + search_radius):
+#                 for c in range(pad_col - search_radius, pad_col + search_radius):
+#                     other_patch = img[r - template_radius: r + template_radius + 1, c - template_radius: c + template_radius + 1]
+#                     diff = center_patch - other_patch
+#                     distance_2 = np.multiply(diff, diff)
+#                     pixel_weight = np.sum(np.multiply(kernel, distance_2))
+#
+#                     pixel_weight = np.exp(pixel_weight / (h**2))
+#                     sum_weight = sum_weight + pixel_weight
+#                     sum_pixel_value = sum_pixel_value + pixel_weight * img[r, c]
+#
+#             out_image[row, col] = clamp(int(sum_pixel_value / sum_weight))
+#     return out_image
+#
+# # Call means_filter for the input image
+# if __name__ == "__main__":
+#     image = cv2.imread('lena512.bmp', 0)
+#     noise_image = double2uint8(image + np.random.randn(*image.shape) * 20)
+#     mean_image = means_filter(image, h=10, templateWindowSize=7, searchWindow=5)
+#     plt.figure()
+#     plt.subplot(131)
+#     plt.axis('off')
+#     plt.imshow(image, cmap='gray')
+#     plt.subplot(132)
+#     plt.axis('off')
+#     plt.imshow(noise_image, cmap='gray')
+#     plt.subplot(133)
+#     plt.axis('off')
+#     plt.imshow(mean_image, cmap='gray')
+#     plt.show()
+
+
 import numpy as np
-from matplotlib import pyplot as plt
+import math
+import scipy.signal, scipy.interpolate
+import matplotlib.pyplot as plt
+import cv2
 
 
-def double2uint8(I, ratio=1.0):
-    return np.clip(np.round(I*ratio),0,255).astype(np.uint8)
 
-def gaussian(l, sig):
-    # Generate array
-    ax = np.arange(-l // 2 + 1., l // 2 + 1.)
-    # Generate 2D matrices by duplicating ax along two axes
-    xx, yy = np.meshgrid(ax, ax)
-    # kernel will be the gaussian over the 2D arrays
-    kernel = np.exp(-(xx**2 + yy**2) / (2. * sig**2))
-    # Normalise the kernel
-    final = kernel / kernel.sum()
-    return final
+def bilateral_approximation(image, sigmaS, sigmaR, samplingS=None, samplingR=None):
+    # It is derived from Jiawen Chen's matlab implementation
+    # The original papers and matlab code are available at http://people.csail.mit.edu/sparis/bf/
 
-
-def clamp(p):
-    """return RGB color between 0 and 255"""
-    if p < 0:
-        return 0
-    elif p > 255:
-        return 255
-    else:
-        return p
+    # --------------- 原始分辨率 --------------- #
+    inputHeight = image.shape[0]
+    inputWidth = image.shape[1]
+    sigmaS = sigmaS
+    sigmaR = sigmaR
+    samplingS = sigmaS if (samplingS is None) else samplingS
+    samplingR = sigmaR if (samplingR is None) else samplingR
+    edgeMax = np.amax(image)
+    edgeMin = np.amin(image)
+    edgeDelta = edgeMax - edgeMin
 
 
-def means_filter(image, h=10, templateWindowSize=7, searchWindow=21):
-    height, width = image.shape[0], image.shape[1]
-    template_radius = int(templateWindowSize / 2)
-    search_radius = int(searchWindow / 2)
+    # --------------- 下采样 --------------- #
+    derivedSigmaS = sigmaS / samplingS
+    derivedSigmaR = sigmaR / samplingR
 
-    # Padding the image
-    padLength = template_radius + search_radius
-    img = cv2.copyMakeBorder(image, padLength, padLength, padLength, padLength, cv2.BORDER_CONSTANT, value=255)
+    paddingXY = math.floor(2 * derivedSigmaS) + 1
+    paddingZ = math.floor(2 * derivedSigmaR) + 1
 
-    # output image
-    out_image = np.zeros((height, width), dtype='float')
+    downsampledWidth = int(round((inputWidth - 1) / samplingS) + 1 + 2 * paddingXY)
+    downsampledHeight = int(round((inputHeight - 1) / samplingS) + 1 + 2 * paddingXY)
+    downsampledDepth = int(round(edgeDelta / samplingR) + 1 + 2 * paddingZ)
 
-    # generate gaussian kernel matrix of 7*7
-    kernel = gaussian(templateWindowSize, 1)
+    wi = np.zeros((downsampledHeight, downsampledWidth, downsampledDepth))
+    w = np.zeros((downsampledHeight, downsampledWidth, downsampledDepth))
 
-    # Run the non-local means for each pixel
-    for row in range(height):
-        for col in range(width):
-            pad_row = row + padLength
-            pad_col = col + padLength
-            center_patch = img[pad_row - template_radius: pad_row + template_radius + 1, pad_col - template_radius: pad_col + template_radius + 1]
+    # 下采样索引
+    (ygrid, xgrid) = np.meshgrid(range(inputWidth), range(inputHeight))
 
-            sum_pixel_value = 0
-            sum_weight = 0
+    dimx = np.around(xgrid / samplingS) + paddingXY
+    dimy = np.around(ygrid / samplingS) + paddingXY
+    dimz = np.around((image - edgeMin) / samplingR) + paddingZ
 
-            # Apply Gaussian weighted square distance between patches of 7*7 in a window of 21*21
-            for r in range(pad_row - search_radius, pad_row + search_radius):
-                for c in range(pad_col - search_radius, pad_col + search_radius):
-                    other_patch = img[r - template_radius: r + template_radius + 1, c - template_radius: c + template_radius + 1]
-                    diff = center_patch - other_patch
-                    distance_2 = np.multiply(diff, diff)
-                    pixel_weight = np.sum(np.multiply(kernel, distance_2))
+    flat_image = image.flatten()
+    flatx = dimx.flatten()
+    flaty = dimy.flatten()
+    flatz = dimz.flatten()
 
-                    pixel_weight = np.exp(pixel_weight / (h**2))
-                    sum_weight = sum_weight + pixel_weight
-                    sum_pixel_value = sum_pixel_value + pixel_weight * img[r, c]
+    # 盒式滤波器（平均下采样）
+    for k in range(dimz.size):
+        image_k = flat_image[k]
+        dimx_k = int(flatx[k])
+        dimy_k = int(flaty[k])
+        dimz_k = int(flatz[k])
 
-            out_image[row, col] = clamp(int(sum_pixel_value / sum_weight))
+        wi[dimx_k, dimy_k, dimz_k] += image_k
+        w[dimx_k, dimy_k, dimz_k] += 1
+
+
+    # ---------------  三维卷积 --------------- #
+    # 生成卷积核
+    kernelWidth = 2 * derivedSigmaS + 1
+    kernelHeight = kernelWidth
+    kernelDepth = 2 * derivedSigmaR + 1
+
+    halfKernelWidth = math.floor(kernelWidth / 2)
+    halfKernelHeight = math.floor(kernelHeight / 2)
+    halfKernelDepth = math.floor(kernelDepth / 2)
+
+    (gridX, gridY, gridZ) = np.meshgrid(range(int(kernelWidth)), range(int(kernelHeight)), range(int(kernelDepth)))
+    # 平移，使得中心为0
+    gridX -= halfKernelWidth
+    gridY -= halfKernelHeight
+    gridZ -= halfKernelDepth
+    gridRSquared = ((gridX * gridX + gridY * gridY) / (derivedSigmaS * derivedSigmaS)) + \
+                   ((gridZ * gridZ) / (derivedSigmaR * derivedSigmaR))
+    kernel = np.exp(-0.5 * gridRSquared)
+
+    # 卷积
+    blurredGridData = scipy.signal.fftconvolve(wi, kernel, mode='same')
+    blurredGridWeights = scipy.signal.fftconvolve(w, kernel, mode='same')
+
+    # ---------------  divide --------------- #
+    blurredGridWeights = np.where(blurredGridWeights == 0, -2, blurredGridWeights)  # avoid divide by 0, won't read there anyway
+    normalizedBlurredGrid = blurredGridData / blurredGridWeights
+    normalizedBlurredGrid = np.where(blurredGridWeights < -1, 0, normalizedBlurredGrid)  # put 0s where it's undefined
+
+
+    # --------------- 上采样 --------------- #
+    (ygrid, xgrid) = np.meshgrid(range(inputWidth), range(inputHeight))
+
+    # 上采样索引
+    dimx = (xgrid / samplingS) + paddingXY
+    dimy = (ygrid / samplingS) + paddingXY
+    dimz = (image - edgeMin) / samplingR + paddingZ
+
+    out_image = scipy.interpolate.interpn((range(normalizedBlurredGrid.shape[0]),
+                                           range(normalizedBlurredGrid.shape[1]),
+                                           range(normalizedBlurredGrid.shape[2])),
+                                          normalizedBlurredGrid,
+                                          (dimx, dimy, dimz))
     return out_image
 
-# Call means_filter for the input image
+
 if __name__ == "__main__":
     image = cv2.imread('lena512.bmp', 0)
-    noise_image = double2uint8(image + np.random.randn(*image.shape) * 20)
-    mean_image = means_filter(image, h=10, templateWindowSize=7, searchWindow=5)
+    mean_image = bilateral_approximation(image, sigmaS=64, sigmaR=32, samplingS=32, samplingR=16)
     plt.figure()
-    plt.subplot(131)
+    plt.subplot(121)
     plt.axis('off')
     plt.imshow(image, cmap='gray')
-    plt.subplot(132)
-    plt.axis('off')
-    plt.imshow(noise_image, cmap='gray')
-    plt.subplot(133)
+    plt.subplot(122)
     plt.axis('off')
     plt.imshow(mean_image, cmap='gray')
     plt.show()
-
-
