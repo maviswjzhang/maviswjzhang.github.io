@@ -658,80 +658,80 @@
 #     plt.show()
 
 
-
-import numpy as np
-import cv2
-import math
-import matplotlib.pyplot as plt
-
-
-def distance(x, y, i, j):
-    return np.sqrt((x-i)**2 + (y-j)**2)
-
-
-def gaussian(x, sigma):
-    return (1.0 / (2 * math.pi * (sigma ** 2))) * math.exp(- (x ** 2) / (2 * sigma ** 2))
-
-
-def joint_bilateral_filter(image, reference_image, diameter, sigma_color, sigma_space):
-    assert image.shape == reference_image.shape
-    width = image.shape[0]
-    height = image.shape[1]
-    radius = int(diameter / 2)
-    out_image = np.zeros_like(image)
-
-    print('===============START=================')
-    for row in range(height):
-        for col in range(width):
-            current_pixel_filtered = 0
-            weight_sum = 0  # for normalize
-            for semi_row in range(-radius, radius + 1):
-                for semi_col in range(-radius, radius + 1):
-                    # calculate the convolution by traversing each close pixel within radius
-                    if row + semi_row >= 0 and row + semi_row < height:
-                        row_offset = row + semi_row
-                    else:
-                        row_offset = 0
-                    if semi_col + col >= 0 and semi_col + col < width:
-                        col_offset = col + semi_col
-                    else:
-                        col_offset = 0
-                    color_weight = gaussian(reference_image[row_offset][col_offset] - reference_image[row][col], sigma_color)
-                    space_weight = gaussian(distance(row_offset, col_offset, row, col), sigma_space)
-                    weight = space_weight * color_weight
-                    current_pixel_filtered += image[row_offset][col_offset] * weight
-                    weight_sum += weight
-
-            current_pixel_filtered = current_pixel_filtered / weight_sum
-            out_image[row, col] = int(round(current_pixel_filtered))
-    print('===============FINISH=================')
-    return out_image
-
-
-
-if __name__ == "__main__":
-    image = cv2.imread('lena512.bmp', 0)[200:400, 200:400]
-    blur_img = cv2.resize(image, (25, 25))
-    blur_img = cv2.resize(blur_img, (200, 200))
-    plt.figure()
-    plt.subplot(121)
-    plt.axis('off')
-    plt.title('blur image')
-    plt.imshow(blur_img, cmap='gray')
-    plt.subplot(122)
-    plt.axis('off')
-    plt.title('original image')
-    plt.imshow(image, cmap='gray')
-    plt.show()
-    plt.figure()
-    for i, sigma_color in enumerate([10, 100, 200]):
-        for j, sigma_space in enumerate([10, 100, 200]):
-            bf_img = joint_bilateral_filter(blur_img, image, 9, sigma_color, sigma_space)
-            plt.subplot(3, 3, i*3+j+1)
-            plt.axis('off')
-            plt.title('sigma_color: %d,sigma_space: %d' % (sigma_color, sigma_space))
-            plt.imshow(bf_img, cmap='gray')
-    plt.show()
+#
+# import numpy as np
+# import cv2
+# import math
+# import matplotlib.pyplot as plt
+#
+#
+# def distance(x, y, i, j):
+#     return np.sqrt((x-i)**2 + (y-j)**2)
+#
+#
+# def gaussian(x, sigma):
+#     return (1.0 / (2 * math.pi * (sigma ** 2))) * math.exp(- (x ** 2) / (2 * sigma ** 2))
+#
+#
+# def joint_bilateral_filter(image, reference_image, diameter, sigma_color, sigma_space):
+#     assert image.shape == reference_image.shape
+#     width = image.shape[0]
+#     height = image.shape[1]
+#     radius = int(diameter / 2)
+#     out_image = np.zeros_like(image)
+#
+#     print('===============START=================')
+#     for row in range(height):
+#         for col in range(width):
+#             current_pixel_filtered = 0
+#             weight_sum = 0  # for normalize
+#             for semi_row in range(-radius, radius + 1):
+#                 for semi_col in range(-radius, radius + 1):
+#                     # calculate the convolution by traversing each close pixel within radius
+#                     if row + semi_row >= 0 and row + semi_row < height:
+#                         row_offset = row + semi_row
+#                     else:
+#                         row_offset = 0
+#                     if semi_col + col >= 0 and semi_col + col < width:
+#                         col_offset = col + semi_col
+#                     else:
+#                         col_offset = 0
+#                     color_weight = gaussian(reference_image[row_offset][col_offset] - reference_image[row][col], sigma_color)
+#                     space_weight = gaussian(distance(row_offset, col_offset, row, col), sigma_space)
+#                     weight = space_weight * color_weight
+#                     current_pixel_filtered += image[row_offset][col_offset] * weight
+#                     weight_sum += weight
+#
+#             current_pixel_filtered = current_pixel_filtered / weight_sum
+#             out_image[row, col] = int(round(current_pixel_filtered))
+#     print('===============FINISH=================')
+#     return out_image
+#
+#
+#
+# if __name__ == "__main__":
+#     image = cv2.imread('lena512.bmp', 0)[200:400, 200:400]
+#     blur_img = cv2.resize(image, (25, 25))
+#     blur_img = cv2.resize(blur_img, (200, 200))
+#     plt.figure()
+#     plt.subplot(121)
+#     plt.axis('off')
+#     plt.title('blur image')
+#     plt.imshow(blur_img, cmap='gray')
+#     plt.subplot(122)
+#     plt.axis('off')
+#     plt.title('original image')
+#     plt.imshow(image, cmap='gray')
+#     plt.show()
+#     plt.figure()
+#     for i, sigma_color in enumerate([10, 100, 200]):
+#         for j, sigma_space in enumerate([10, 100, 200]):
+#             bf_img = joint_bilateral_filter(blur_img, image, 9, sigma_color, sigma_space)
+#             plt.subplot(3, 3, i*3+j+1)
+#             plt.axis('off')
+#             plt.title('sigma_color: %d,sigma_space: %d' % (sigma_color, sigma_space))
+#             plt.imshow(bf_img, cmap='gray')
+#     plt.show()
 
 # import numpy as np
 # import cv2
@@ -754,4 +754,111 @@ if __name__ == "__main__":
 #             plt.imshow(bf_img, cmap='gray')
 #     plt.show()
 
-cv2.bilateralFilter()
+
+import numpy as np
+import matplotlib.pyplot as plt
+import cv2
+
+
+class GuidedFilter:
+    """
+    References:
+        K.He, J.Sun, and X.Tang. Guided Image Filtering. TPAMI'12.
+    """
+    def __init__(self, I, radius, eps):
+        """
+        Parameters
+        ----------
+        I: NDArray
+            Guided image or guided feature map
+        radius: int
+            Radius of filter
+        eps: float
+            Value controlling sharpness
+        """
+        if len(I.shape) == 2:
+            self._Filter = GrayGuidedFilter(I, radius, eps)
+
+    def filter(self, p):
+        """
+        Parameters
+        ----------
+        p: NDArray
+            Filtering input which is 2D or 3D with format
+            HW or HWC
+        Returns
+        -------
+        ret: NDArray
+            Filtering output whose shape is same with input
+        """
+        p = (1.0 / 255.0) * np.float32(p)
+        if len(p.shape) == 2:
+            return self._Filter.filter(p)
+
+
+class GrayGuidedFilter:
+    """
+    Specific guided filter for gray guided image.
+    """
+    def __init__(self, I, radius, eps):
+        """
+        Parameters
+        ----------
+        I: NDArray
+            2D guided image
+        radius: int
+            Radius of filter
+        eps: float
+            Value controlling sharpness
+        """
+        self.I = (1.0 / 255.0) * np.float32(I)
+        self.radius = radius * 2 + 1
+        self.eps = eps
+
+    def filter(self, p):
+        """
+        Parameters
+        ----------
+        p: NDArray
+            Filtering input of 2D
+        Returns
+        -------
+        q: NDArray
+            Filtering output of 2D
+        """
+        # step 1
+        meanI  = cv2.blur(self.I, (self.radius, self.radius))
+        meanp  = cv2.blur(p, (self.radius, self.radius))
+        corrI  = cv2.blur(self.I * self.I, (self.radius, self.radius))
+        corrIp = cv2.blur(self.I * p, (self.radius, self.radius))
+        # step 2
+        varI   = corrI - meanI * meanI
+        covIp  = corrIp - meanI * meanp
+        # step 3
+        a      = covIp / (varI + self.eps)
+        b      = meanp - a * meanI
+        # step 4
+        meana  = cv2.blur(a, (self.radius, self.radius))
+        meanb  = cv2.blur(b, (self.radius, self.radius))
+        # step 5
+        q = meana * self.I + meanb
+
+        return q
+
+
+def double2uint8(I, ratio=1.0):
+    return np.clip(np.round(I * ratio), 0, 255).astype(np.uint8)
+
+
+if __name__ == "__main__":
+    image = cv2.imread('lena512.bmp', 0)
+    plt.figure()
+    for i, radius in enumerate([2, 4, 8]):
+        for j, e in enumerate([0.1**2, 0.2**2, 0.4**2]):
+            GF = GuidedFilter(image, radius, e)
+            plt.subplot(3, 3, i*3+j+1)
+            plt.axis('off')
+            plt.title('radius: %d, epsilon: %.2f' % (radius, e))
+            plt.imshow(GF.filter(image), cmap='gray')
+    plt.show()
+

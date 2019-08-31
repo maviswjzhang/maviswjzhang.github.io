@@ -35,10 +35,10 @@
       <file leaf-file-name="test.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="174">
-              <caret line="736" column="26" lean-forward="true" selection-start-line="736" selection-start-column="26" selection-end-line="736" selection-end-column="26" />
+            <state relative-caret-position="353">
+              <caret line="857" column="54" selection-start-line="857" selection-start-column="54" selection-end-line="857" selection-end-column="54" />
               <folding>
-                <element signature="e#23132#23150#0" expanded="true" />
+                <element signature="e#26827#26845#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -47,8 +47,8 @@
       <file leaf-file-name="__init__.py" pinned="false" current-in-tab="false">
         <entry file="file://$USER_HOME$/.PyCharmCE2018.1/system/python_stubs/1866972772/cv2/cv2/__init__.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-510">
-              <caret line="2445" column="4" selection-start-line="2445" selection-start-column="4" selection-end-line="2445" selection-end-column="4" />
+            <state relative-caret-position="-518">
+              <caret line="2586" column="4" selection-start-line="2586" selection-start-column="4" selection-end-line="2586" selection-end-column="4" />
             </state>
           </provider>
         </entry>
@@ -76,8 +76,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="7">
-    <option name="x" value="-135" />
-    <option name="y" value="-14" />
+    <option name="x" value="254" />
+    <option name="y" value="15" />
     <option name="width" value="1936" />
     <option name="height" value="1056" />
   </component>
@@ -209,7 +209,7 @@
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.105374075" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.2832244" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.23856209" />
       <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Python Console" order="7" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -256,7 +256,7 @@
         <state relative-caret-position="19200">
           <caret line="644" column="20" lean-forward="true" selection-start-line="644" selection-start-column="20" selection-end-line="644" selection-end-column="20" />
           <folding>
-            <element signature="e#23132#23150#0" expanded="true" />
+            <element signature="e#26827#26845#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -266,7 +266,7 @@
         <state relative-caret-position="4350">
           <caret line="145" lean-forward="true" selection-start-line="145" selection-end-line="145" selection-end-column="31" />
           <folding>
-            <element signature="e#23132#23150#0" expanded="true" />
+            <element signature="e#26827#26845#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -364,17 +364,17 @@
     </entry>
     <entry file="file://$USER_HOME$/.PyCharmCE2018.1/system/python_stubs/1866972772/cv2/cv2/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-510">
-          <caret line="2445" column="4" selection-start-line="2445" selection-start-column="4" selection-end-line="2445" selection-end-column="4" />
+        <state relative-caret-position="-518">
+          <caret line="2586" column="4" selection-start-line="2586" selection-start-column="4" selection-end-line="2586" selection-end-column="4" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="174">
-          <caret line="736" column="26" lean-forward="true" selection-start-line="736" selection-start-column="26" selection-end-line="736" selection-end-column="26" />
+        <state relative-caret-position="353">
+          <caret line="857" column="54" selection-start-line="857" selection-start-column="54" selection-end-line="857" selection-end-column="54" />
           <folding>
-            <element signature="e#23132#23150#0" expanded="true" />
+            <element signature="e#26827#26845#0" expanded="true" />
           </folding>
         </state>
       </provider>
