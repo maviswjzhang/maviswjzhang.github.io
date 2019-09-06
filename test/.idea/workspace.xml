@@ -35,8 +35,8 @@
       <file leaf-file-name="test.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="353">
-              <caret line="857" column="54" selection-start-line="857" selection-start-column="54" selection-end-line="857" selection-end-column="54" />
+            <state relative-caret-position="450">
+              <caret line="762" column="19" lean-forward="true" selection-start-line="762" selection-start-column="19" selection-end-line="762" selection-end-column="19" />
               <folding>
                 <element signature="e#26827#26845#0" expanded="true" />
               </folding>
@@ -75,9 +75,9 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
-    <option name="x" value="254" />
-    <option name="y" value="15" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
     <option name="width" value="1936" />
     <option name="height" value="1056" />
   </component>
@@ -204,12 +204,11 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.105374075" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.23856209" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.23856209" />
       <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Python Console" order="7" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -369,10 +368,19 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$USER_HOME$/Desktop/face recognition/shibieJietu.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="353">
-          <caret line="857" column="54" selection-start-line="857" selection-start-column="54" selection-end-line="857" selection-end-column="54" />
+        <state relative-caret-position="450">
+          <caret line="762" column="19" lean-forward="true" selection-start-line="762" selection-start-column="19" selection-end-line="762" selection-end-column="19" />
           <folding>
             <element signature="e#26827#26845#0" expanded="true" />
           </folding>
