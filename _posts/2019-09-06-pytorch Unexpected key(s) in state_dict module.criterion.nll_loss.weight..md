@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      pytorch错误记录之Unexpected key(s) in state_dict module.criterion.nll_loss.weight
+title:      pytorch错误记录
 subtitle:   持续更新
 date:       2019-09-06
 author:     Nick
