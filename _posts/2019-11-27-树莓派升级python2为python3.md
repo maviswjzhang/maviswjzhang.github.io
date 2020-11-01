@@ -3,7 +3,7 @@ layout:     post
 title:      树莓派——升级为python3.x
 subtitle:   树莓派环境搭建第三步
 date:       2019-11-27
-author:     Nick
+author:     Mavis
 header-img: img/博客背景.jpg
 catalog: true
 tags:

@@ -3,7 +3,7 @@ layout:     post
 title:      谷歌Colaboratory环境配置
 subtitle:   提供免费Tesla K80 GPU
 date:       2019-05-21
-author:     Nick
+author:     Mavis
 header-img: img/博客背景.jpg
 catalog: true
 tags:
