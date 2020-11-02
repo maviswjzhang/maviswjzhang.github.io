@@ -1,4 +1,16 @@
-# 线性表的基本概念
+---
+layout:     post
+title:     线性表的基本概念
+subtitle:  
+date:       2020-04-07
+author:     Mavis
+header-img: img/博客背景.jpg
+catalog: true
+tags:
+    - 数据结构与算法
+
+
+---
 
 ## 线性表的定义
 
@@ -51,7 +63,7 @@ typedef struct node
 ```
 
 #### 双链表
-  
+
 ```c
 typedef char ElemType;
 

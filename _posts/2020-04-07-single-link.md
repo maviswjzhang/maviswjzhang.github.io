@@ -1,4 +1,18 @@
-# 单链表的基本运算
+---
+layout:     post
+title:     单链表的基本运算
+subtitle:  
+date:       2020-04-07
+author:     Mavis
+header-img: img/博客背景.jpg
+catalog: true
+tags:
+    - 数据结构与算法
+
+
+---
+
+
 
 ## 单链表的定义
 
